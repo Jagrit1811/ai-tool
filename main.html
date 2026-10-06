@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>AI Student Practical Suite — 10-in-1 Toolkit</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #172033; }
+    header { background: #172554; color: white; padding: 24px; text-align: center; }
+    header h1 { margin: 0 0 8px; font-size: 26px; }
+    header p { margin: 0; opacity: 0.85; font-size: 14px; }
+    
+    /* Navigation Bar */
+    nav { background: #1e293b; padding: 8px 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .tab-btn { background: #334155; color: #e2e8f0; border: none; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; margin: 0; }
+    .tab-btn:hover { background: #475569; color: #fff; }
+    .tab-btn.active { background: #2563eb; color: #fff; font-weight: bold; }
+
+    /* Layout & Cards */
+    .container { max-width: 1100px; margin: 24px auto; padding: 0 18px; min-height: 75vh; }
+    .tool-tab { display: none; }
+    .tool-tab.active { display: block; }
+    .card { background: white; border-radius: 14px; padding: 22px; margin-bottom: 20px; box-shadow: 0 5px 18px rgba(0,0,0,0.06); }
+    
+    /* Form Elements & Inputs */
+    textarea, input, select { width: 100%; padding: 12px; border: 1px solid #ccd4e0; border-radius: 8px; margin: 7px 0 14px; font-size: 15px; }
+    button { border: 0; border-radius: 8px; padding: 11px 16px; background: #2563eb; color: white; cursor: pointer; margin: 5px; font-size: 14px; }
+    button:hover { background: #1d4ed8; }
+    .secondary { background: #475569; }
+    .secondary:hover { background: #334155; }
+    .success { background: #15803d; }
+    .success:hover { background: #166534; }
+    
+    /* Outputs & Components */
+    .output { background: #f8fafc; border: 1px solid #dbe3ee; border-radius: 10px; padding: 20px; min-height: 130px; word-break: break-word; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .slide { display: none; min-height: 280px; padding: 35px; background: #eff6ff; border-radius: 14px; text-align: center; }
+    .slide.active { display: block; }
+    .quiz-q { padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin: 12px 0; }
+    .option { display: block; width: 100%; text-align: left; background: #fff; color: #172033; border: 1px solid #ccd4e0; }
+    .correct { background: #dcfce7 !important; color: #166534; font-weight: bold; }
+    .wrong { background: #fee2e2 !important; color: #991b1b; }
+    .chat { height: 350px; overflow-y: auto; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .msg { padding: 10px 13px; border-radius: 12px; margin: 8px 0; max-width: 80%; }
+    .user { background: #dbeafe; margin-left: auto; text-align: right; }
+    .bot { background: #e2e8f0; }
+    .flash { min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center; background: #eef2ff; border-radius: 14px; padding: 25px; font-size: 20px; cursor: pointer; user-select: none; border: 2px dashed #818cf8; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #d5dce6; padding: 10px; text-align: left; }
+    th { background: #e2e8f0; }
+    
+    footer { text-align: center; padding: 25px; color: #64748b; font-size: 13px; border-top: 1px solid #e2e8f0; }
+    @media(max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AI Student Practical Suite</h1>
+  <p>10 Integrated Tools in One Web Application</p>
+</header>
+
+<nav id="navBar">
+  <button class="tab-btn active" onclick="switchTab(0)">1. Resume</button>
+  <button class="tab-btn" onclick="switchTab(1)">2. Notes</button>
+  <button class="tab-btn" onclick="switchTab(2)">3. PPT</button>
+  <button class="tab-btn" onclick="switchTab(3)">4. Mind Map</button>
+  <button class="tab-btn" onclick="switchTab(4)">5. Sheets DB</button>
+  <button class="tab-btn" onclick="switchTab(5)">6. Quiz / MCQ</button>
+  <button class="tab-btn" onclick="switchTab(6)">7. Chatbot</button>
+  <button class="tab-btn" onclick="switchTab(7)">8. Flashcards</button>
+  <button class="tab-btn" onclick="switchTab(8)">9. Planner</button>
+  <button class="tab-btn" onclick="switchTab(9)">10. OCR Summary</button>
+</nav>
+
+<div class="container">
+
+  <!-- 1. AI RESUME BUILDER -->
+  <div id="tab-0" class="tool-tab active">
+    <div class="card">
+      <h2>AI Resume Builder</h2>
+      <input id="res_name" placeholder="Full Name">
+      <input id="res_contact" placeholder="Email / Phone">
+      <textarea id="res_education" placeholder="Education"></textarea>
+      <textarea id="res_skills" placeholder="Skills"></textarea>
+      <textarea id="res_experience" placeholder="Experience"></textarea>
+      <textarea id="res_projects" placeholder="Projects"></textarea>
+      <textarea id="res_objective" placeholder="Career Objective"></textarea>
+      <button onclick="generateResume()">Generate Resume</button>
+      <button class="success" onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <div class="card">
+      <h2>Resume Preview</h2>
+      <div id="res_out" class="output">Your resume will appear here.</div>
+    </div>
+  </div>
+
+  <!-- 2. AI NOTES GENERATOR -->
+  <div id="tab-1" class="tool-tab">
+    <div class="card">
+      <h2>AI Notes Generator</h2>
+      <textarea id="notes_txt" rows="8" placeholder="Paste your textbook paragraph here..."></textarea>
+      <button onclick="makeNotes()">Generate Notes</button>
+      <button class="secondary" onclick="copyNotes()">Copy</button>
+    </div>
+    <div class="card">
+      <h2>Structured Study Notes</h2>
+      <div id="notes_out" class="output">Generated structured notes will appear here.</div>
+    </div>
+  </div>
+
+  <!-- 3. AI PRESENTATION GENERATOR -->
+  <div id="tab-2" class="tool-tab">
+    <div class="card">
+      <h2>AI Presentation Generator</h2>
+      <input id="ppt_topic" placeholder="Enter presentation topic">
+      <button onclick="generateSlides()">Generate Slides</button>
+    </div>
+    <div id="ppt_slides"></div>
+    <div style="text-align:center; margin-top: 15px;">
+      <button onclick="pptPrev()">Previous</button>
+      <button onclick="pptNext()">Next</button>
+    </div>
+  </div>
+
+  <!-- 4. AI MIND MAP GENERATOR -->
+  <div id="tab-3" class="tool-tab">
+    <div class="card">
+      <h2>AI Mind Map Generator</h2>
+      <textarea id="mm_syllabus" rows="6" placeholder="Enter syllabus (comma or newline separated), e.g. Java, OOP, Inheritance, Polymorphism, Collections..."></textarea>
+      <button onclick="makeMap()">Generate Mind Map</button>
+    </div>
+    <div class="card">
+      <h2>Mind Map</h2>
+      <div id="mm_map" class="output">Mind map tree will appear here.</div>
+    </div>
+  </div>
+
+  <!-- 5. GOOGLE SHEETS BACKEND / TABLE DEMO -->
+  <div id="tab-4" class="tool-tab">
+    <div class="card">
+      <h2>Google Sheets Data Demo</h2>
+      <input id="gs_student" placeholder="Student Name">
+      <input id="gs_marks" type="number" placeholder="Marks">
+      <button onclick="addRecord()">Add Record</button>
+      <button class="secondary" onclick="generateInsight()">AI-Style Insight</button>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Name</th><th>Marks</th></tr></thead>
+        <tbody id="gs_rows"></tbody>
+      </table>
+      <p id="gs_insight" style="font-weight: bold; margin-top: 15px; color: #1e40af;"></p>
+    </div>
+  </div>
+
+  <!-- 6. AI QUIZ GENERATOR -->
+  <div id="tab-5" class="tool-tab">
+    <div class="card">
+      <h2>AI Quiz / MCQ Generator</h2>
+      <input id="quiz_topic" placeholder="Topic e.g. Java OOP">
+      <button onclick="startQuiz()">Generate Quiz</button>
+    </div>
+    <div class="card">
+      <div id="quiz_box"></div>
+      <h3 id="quiz_score" style="margin-top:15px"></h3>
+    </div>
+  </div>
+
+  <!-- 7. AI CHATBOT -->
+  <div id="tab-6" class="tool-tab">
+    <div class="card">
+      <h2>AI Subject Doubt-Solving Chatbot</h2>
+      <div id="cb_chat" class="chat">
+        <div class="msg bot">Hello! Ask me a study question (e.g. OOP, HTML, JavaScript).</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top: 10px;">
+        <input id="cb_q" placeholder="Type your question..." style="margin: 0;" onkeydown="if(event.key==='Enter')askChat()">
+        <button onclick="askChat()" style="margin: 0;">Ask</button>
+        <button class="secondary" onclick="document.getElementById('cb_chat').innerHTML=''" style="margin: 0;">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. AI FLASHCARDS -->
+  <div id="tab-7" class="tool-tab">
+    <div class="card">
+      <h2>AI Flashcard Generator</h2>
+      <input id="fc_topic" placeholder="Topic e.g. Java">
+      <button onclick="makeFlashcards()">Generate Flashcards</button>
+    </div>
+    <div class="card">
+      <div id="fc_card" class="flash" onclick="flipFlashcard()">Click "Generate Flashcards" to begin</div>
+      <div style="text-align:center; margin-top: 15px;">
+        <button onclick="fcPrev()">Previous</button>
+        <button onclick="fcNext()">Next</button>
+        <button class="secondary" onclick="fcShuffle()">Shuffle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. AI STUDY PLANNER -->
+  <div id="tab-8" class="tool-tab">
+    <div class="card">
+      <h2>AI Study Planner / Timetable</h2>
+      <input id="sp_subjects" placeholder="Subjects comma separated: Java, DSA, DBMS, Web Development">
+      <input id="sp_hours" type="number" min="1" max="12" placeholder="Hours per day (e.g. 3)">
+      <button onclick="planStudy()">Generate Study Plan</button>
+    </div>
+    <div class="card">
+      <h2>Weekly Timetable</h2>
+      <div id="sp_out" class="output">Your schedule will be generated here.</div>
+    </div>
+  </div>
+
+  <!-- 10. AI NOTES SUMMARIZER / OCR DEMO -->
+  <div id="tab-9" class="tool-tab">
+    <div class="card">
+      <h2>AI Notes Summarizer — OCR Demo</h2>
+      <input id="ocr_img" type="file" accept="image/*">
+      <p style="font-size: 13px; color: #64748b;">This standalone demo previews your notes image. Enter/paste OCR-extracted text below to generate summaries.</p>
+      <div style="text-align:center;"><img id="ocr_preview" style="max-width:100%;max-height:300px;border-radius:10px;margin-bottom:10px;"></div>
+      <textarea id="ocr_text" rows="6" placeholder="Paste or edit extracted OCR text here..."></textarea>
+      <button onclick="summarizeOCR()">Summarize Notes</button>
+    </div>
+    <div class="card">
+      <h2>Summary Output</h2>
+      <div id="ocr_out" class="output">Summary will appear here.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>College AI Practical Project Suite — All 10 Standalone Modules Integrated</footer>
+
+<script>
+  // TAB NAVIGATION SYSTEM
+  function switchTab(index) {
+    document.querySelectorAll('.tool-tab').forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
+  }
+
+  function esc(x) {
+    let d = document.createElement('div');
+    d.textContent = x || '';
+    return d.innerHTML;
+  }
+
+  // 1. RESUME BUILDER
+  function generateResume() {
+    let n = esc(document.getElementById('res_name').value);
+    let c = esc(document.getElementById('res_contact').value);
+    let e = esc(document.getElementById('res_education').value);
+    let s = esc(document.getElementById('res_skills').value);
+    let x = esc(document.getElementById('res_experience').value) || "Fresher";
+    let p = esc(document.getElementById('res_projects').value) || "No projects provided";
+    let o = esc(document.getElementById('res_objective').value) || "Seeking an opportunity to apply technical and problem-solving skills.";
+    document.getElementById('res_out').innerHTML = `
+      <h1 style="text-align:center;margin:0">${n}</h1>
+      <p style="text-align:center;color:#475569">${c}</p>
+      <hr>
+      <h3>Career Objective</h3><p>${o}</p>
+      <h3>Education</h3><p>${e}</p>
+      <h3>Skills</h3><p>${s}</p>
+      <h3>Experience</h3><p>${x}</p>
+      <h3>Projects</h3><p>${p}</p>
+    `;
+  }
+
+  // 2. NOTES GENERATOR
+  function makeNotes() {
+    let t = document.getElementById('notes_txt').value.trim();
+    let out = document.getElementById('notes_out');
+    if (!t) { out.innerHTML = "Please enter some text."; return; }
+    let sentences = t.split(/[.!?]+/).map(x => x.trim()).filter(Boolean);
+    out.innerHTML = "<h3>Key Points</h3><ul>" + sentences.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul><h3>Quick Revision</h3><p>" + esc(sentences.slice(0, 3).join(". ")) + ".</p>";
+  }
+  function copyNotes() {
+    navigator.clipboard.writeText(document.getElementById('notes_out').innerText);
+    alert("Notes copied!");
+  }
+
+  // 3. PPT GENERATOR
+  let pptI = 0, pptData = [];
+  function generateSlides() {
+    let t = document.getElementById('ppt_topic').value.trim() || "Artificial Intelligence";
+    pptData = [
+      ["Introduction", `Introduction to ${t}`, "Definition", "Importance", "Real-world relevance"],
+      ["Key Concepts", `Core concepts of ${t}`, "Basic principles", "Main components", "Important terminology"],
+      ["Applications", "Applications", `How ${t} is used today`, "Industry examples", "Student use cases"],
+      ["Advantages", "Advantages", "Saves time", "Improves productivity", "Supports decision making"],
+      ["Challenges", "Challenges", "Accuracy", "Privacy and security", "Ethical considerations"],
+      ["Conclusion", "Conclusion", "Key takeaways", "Future scope", "Thank you"]
+    ];
+    pptI = 0;
+    renderSlides();
+  }
+  function renderSlides() {
+    let container = document.getElementById('ppt_slides');
+    if (!pptData.length) return;
+    container.innerHTML = pptData.map((s, k) => `
+      <div class="slide ${k === pptI ? 'active' : ''}">
+        <h1 style="margin-top:0">${esc(s[0])}</h1>
+        <h2 style="color:#2563eb">${esc(s[1])}</h2>
+        <ul style="display:inline-block;text-align:left;font-size:18px;line-height:1.6">
+          <li>${esc(s[2])}</li><li>${esc(s[3])}</li><li>${esc(s[4])}</li>
+        </ul>
+      </div>
+    `).join("");
+  }
+  function pptNext() { if (pptData.length) { pptI = (pptI + 1) % pptData.length; renderSlides(); } }
+  function pptPrev() { if (pptData.length) { pptI = (pptI - 1 + pptData.length) % pptData.length; renderSlides(); } }
+
+  // 4. MIND MAP GENERATOR
+  function makeMap() {
+    let raw = document.getElementById('mm_syllabus').value;
+    let a = raw.split(/[\n,]+/).map(x => x.trim()).filter(Boolean);
+    let map = document.getElementById('mm_map');
+    if (!a.length) { map.innerHTML = "Enter syllabus first."; return; }
+    let root = esc(a[0]);
+    map.innerHTML = `<h2>📌 ${root}</h2>` + a.slice(1).map((x, i) => `
+      <div style="margin:12px 0 12px ${30 + (i % 3) * 35}px;padding:12px;border-left:4px solid #2563eb;background:#eef2ff;border-radius:8px">
+        ↳ <b>${esc(x)}</b><br><small style="color:#64748b">Key concept / sub-topic</small>
+      </div>
+    `).join("");
+  }
+
+  // 5. GOOGLE SHEETS / DATA DEMO
+  let sheetData = [];
+  function addRecord() {
+    let student = document.getElementById('gs_student');
+    let marks = document.getElementById('gs_marks');
+    let n = student.value.trim(), m = marks.value;
+    if (!n || m === "") return;
+    sheetData.push({ n, m: Number(m) });
+    student.value = "";
+    marks.value = "";
+    renderSheetTable();
+  }
+  function renderSheetTable() {
+    document.getElementById('gs_rows').innerHTML = sheetData.map(x => `<tr><td>${esc(x.n)}</td><td>${x.m}</td></tr>`).join("");
+  }
+  function generateInsight() {
+    let ins = document.getElementById('gs_insight');
+    if (!sheetData.length) { ins.innerText = "No records yet."; return; }
+    let avg = sheetData.reduce((a, b) => a + b.m, 0) / sheetData.length;
+    let top = Math.max(...sheetData.map(x => x.m));
+    ins.innerText = `Insight: ${sheetData.length} students recorded. Average marks: ${avg.toFixed(1)}. Highest marks: ${top}.`;
+  }
+
+  // 6. QUIZ GENERATOR
+  let quizQs = [], quizScore = 0;
+  function startQuiz() {
+    let t = document.getElementById('quiz_topic').value || "Computer Science";
+    quizQs = [
+      ["Which concept hides implementation details?", ["Encapsulation", "Inheritance", "Looping", "Compilation"], 0],
+      ["Which structure follows FIFO?", ["Stack", "Queue", "Tree", "Graph"], 1],
+      ["Which language is commonly used for web page structure?", ["Java", "HTML", "SQL", "Python"], 1],
+      ["Which is a database system?", ["MySQL", "CSS", "HTML", "Git"], 0],
+      ["What does CPU stand for?", ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Control Processing User"], 0]
+    ];
+    quizScore = 0;
+    renderQuiz();
+  }
+  function renderQuiz() {
+    let container = document.getElementById('quiz_box');
+    container.innerHTML = quizQs.map((q, i) => `
+      <div class="quiz-q">
+        <b>${i + 1}. ${esc(q[0])}</b>
+        <div style="margin-top:8px;">
+          ${q[1].map((o, j) => `<button class="option" onclick="answerQuiz(${i}, ${j}, this)">${esc(o)}</button>`).join("")}
+        </div>
+      </div>
+    `).join("");
+    document.getElementById("quiz_score").innerText = "Score: 0";
+  }
+  function answerQuiz(i, j, btn) {
+    let bs = btn.parentElement.querySelectorAll("button");
+    bs.forEach(x => x.disabled = true);
+    if (j === quizQs[i][2]) {
+      btn.classList.add("correct");
+      quizScore++;
+    } else {
+      btn.classList.add("wrong");
+      bs[quizQs[i][2]].classList.add("correct");
+    }
+    document.getElementById("quiz_score").innerText = `Score: ${quizScore}/${quizQs.length}`;
+  }
+
+  // 7. CHATBOT
+  function askChat() {
+    let qInput = document.getElementById('cb_q');
+    let x = qInput.value.trim();
+    if (!x) return;
+    let chat = document.getElementById('cb_chat');
+    chat.innerHTML += `<div class="msg user">${esc(x)}</div>`;
+    let ans = "I am a demo subject tutor. Try asking about definitions, concepts, examples, advantages, disadvantages, or steps. For example: 'Explain OOP simply.'";
+    if (/oop|object|class/i.test(x)) ans = "OOP means Object-Oriented Programming. It organizes software around objects containing data and behavior. Main concepts include encapsulation, inheritance, polymorphism and abstraction.";
+    else if (/html/i.test(x)) ans = "HTML is the markup language used to structure web pages using elements such as headings, paragraphs, links, images and forms.";
+    else if (/javascript/i.test(x)) ans = "JavaScript is a programming language used to add logic and interactivity to web pages.";
+    
+    chat.innerHTML += `<div class="msg bot">${ans}</div>`;
+    qInput.value = "";
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // 8. FLASHCARDS
+  let fcCards = [], fcIdx = 0, fcBack = false;
+  function makeFlashcards() {
+    fcCards = [
+      ["What is Java?", "A high-level, object-oriented programming language."],
+      ["What is a class?", "A blueprint used to create objects."],
+      ["What is inheritance?", "A mechanism where a class acquires properties and behavior of another class."],
+      ["What is polymorphism?", "The ability to represent one interface in multiple forms."],
+      ["What is encapsulation?", "Bundling data and methods together and controlling access."]
+    ];
+    fcIdx = 0;
+    fcBack = false;
+    renderFlashcard();
+  }
+  function renderFlashcard() {
+    let card = document.getElementById('fc_card');
+    if (!fcCards.length) return;
+    card.innerText = fcBack ? fcCards[fcIdx][1] : fcCards[fcIdx][0];
+  }
+  function flipFlashcard() {
+    if (!fcCards.length) return;
+    fcBack = !fcBack;
+    renderFlashcard();
+  }
+  function fcNext() {
+    if (fcCards.length) { fcIdx = (fcIdx + 1) % fcCards.length; fcBack = false; renderFlashcard(); }
+  }
+  function fcPrev() {
+    if (fcCards.length) { fcIdx = (fcIdx - 1 + fcCards.length) % fcCards.length; fcBack = false; renderFlashcard(); }
+  }
+  function fcShuffle() {
+    if (fcCards.length) { fcCards.sort(() => Math.random() - 0.5); fcIdx = 0; fcBack = false; renderFlashcard(); }
+  }
+
+  // 9. STUDY PLANNER
+  function planStudy() {
+    let raw = document.getElementById('sp_subjects').value;
+    let s = raw.split(",").map(x => x.trim()).filter(Boolean);
+    let h = Number(document.getElementById('sp_hours').value) || 3;
+    let out = document.getElementById('sp_out');
+    if (!s.length) { out.innerHTML = "Please enter at least one subject."; return; }
+    let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    let rows = days.map((d, i) => {
+      let parts = [];
+      for (let j = 0; j < h; j++) parts.push(s[(i * h + j) % s.length]);
+      return `<tr><td><b>${d}</b></td><td>${parts.map((x, j) => `${j + 1}:00 - ${j + 2}:00 →${esc(x)}`).join("<br>")}</td></tr>`;
+    }).join("");
+    out.innerHTML = `<table><thead><tr><th style="width:25%">Day</th><th>Study Schedule</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  // 10. OCR NOTES SUMMARIZER
+  document.getElementById('ocr_img').addEventListener("change", function() {
+    let f = this.files[0];
+    if (f) document.getElementById('ocr_preview').src = URL.createObjectURL(f);
+  });
+  function summarizeOCR() {
+    let t = document.getElementById('ocr_text').value.trim();
+    let out = document.getElementById('ocr_out');
+    if (!t) { out.innerText = "Enter extracted/corrected text first."; return; }
+    let a = t.split(/[.!?]+/).map(x => x.trim()).filter(Boolean);
+    out.innerHTML = "<h3>Key Points</h3><ul>" + a.slice(0, 7).map(x => `<li>${esc(x)}</li>`).join("") + "</ul><h3>Short Summary</h3><p>" + esc(a.slice(0, 3).join(". ")) + ".</p>";
+  }
+</script>
+</body>
+</html>
